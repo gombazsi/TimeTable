@@ -22,6 +22,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="DAL\" />
-    <Folder Include="Models\DTO\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

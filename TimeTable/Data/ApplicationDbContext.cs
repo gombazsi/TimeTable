@@ -20,8 +20,8 @@ namespace TimeTable.Data
             
         }
 
-        DbSet<Subject> Subject;
-        DbSet<Location> Location;
-        DbSet<Lesson> Lesson;
+        public DbSet<Subject> Subject { get; set; }
+        public DbSet<Location> Location { get; set; }
+        public DbSet<Lesson> Lesson { get; set; }
     }
 }

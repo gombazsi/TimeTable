@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TimeTable.Data;
 using TimeTable.Models;
+using TimeTable.Services;
+using TimeTable.Services.Implementations;
+using TimeTable.Services.Interfaces;
 
 namespace TimeTable
 {
@@ -35,13 +38,16 @@ namespace TimeTable
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            /*services.AddAuthentication()
+                .AddIdentityServerJwt();*/
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<ILessonService, LessonService>();
+
+            services.AddSwaggerGen();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -71,10 +77,15 @@ namespace TimeTable
                 app.UseSpaStaticFiles();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TimeTable API V1");
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseIdentityServer();
+            //app.UseIdentityServer();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
