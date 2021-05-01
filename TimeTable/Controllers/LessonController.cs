@@ -20,6 +20,12 @@ namespace TimeTable.Controllers
             this.lessonService = lessonService;
         }
 
+        [HttpGet("test")]
+        public async Task<string> test()
+        {
+            return "test";
+        }
+
         [HttpGet("lessons")]
         public async Task<List<LessonDTO>> GetLessons()
         {
