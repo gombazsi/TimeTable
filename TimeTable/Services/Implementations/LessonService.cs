@@ -57,7 +57,9 @@ namespace TimeTable.Services
             MapperConfiguration mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<LessonModDTO, Lesson>());
             Lesson lesson = new Mapper(mapperConfiguration).Map<Lesson>(lessonModDTO);
             dbContext.Add(lesson);
-            dbContext.Lesson.Remove(await dbContext.Lesson.FirstOrDefaultAsync(l => l.DayOfWeek == lesson.DayOfWeek && l.LessonNumber == lesson.LessonNumber && l.LessonId != lesson.LessonId));
+            Lesson toRemove = await dbContext.Lesson.FirstOrDefaultAsync(l => l.DayOfWeek == lesson.DayOfWeek && l.LessonNumber == lesson.LessonNumber && l.LessonId != lesson.LessonId);
+            if(toRemove!=null)
+                dbContext.Lesson.Remove(toRemove);
             await dbContext.SaveChangesAsync();
             return lesson.LessonId;
         }
@@ -67,7 +69,9 @@ namespace TimeTable.Services
             MapperConfiguration mapperConfiguration = new MapperConfiguration(cfg => cfg.CreateMap<LessonModDTO, Lesson>());
             Lesson lesson = await dbContext.Lesson.FirstOrDefaultAsync(lesson => lesson.LessonId == id);
             lesson = new Mapper(mapperConfiguration).Map<LessonModDTO, Lesson>(lessonModDTO, lesson);
-            dbContext.Lesson.Remove(await dbContext.Lesson.FirstOrDefaultAsync(l => l.DayOfWeek == lesson.DayOfWeek && l.LessonNumber == lesson.LessonNumber && l.LessonId != lesson.LessonId));
+            Lesson toRemove= await dbContext.Lesson.FirstOrDefaultAsync(l => l.DayOfWeek == lesson.DayOfWeek && l.LessonNumber == lesson.LessonNumber && l.LessonId != lesson.LessonId);
+            if (toRemove != null)
+                dbContext.Lesson.Remove(toRemove);
             await dbContext.SaveChangesAsync();
         }
     }
