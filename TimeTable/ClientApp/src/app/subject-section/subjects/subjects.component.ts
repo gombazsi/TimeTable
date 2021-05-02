@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Subject } from '../../models/subject';
+import { Subject } from '../../shared/models/subject';
 import { SubjectsService } from '../subjects.service';
 
 @Component({
@@ -9,7 +9,7 @@ import { SubjectsService } from '../subjects.service';
 })
 export class SubjectsComponent implements OnInit {
 
-  @ViewChild('lessonNameInput', { static: false }) lessonNameInputRef: ElementRef
+  @ViewChild('subjectNameInput', { static: false }) subjectNameInputRef: ElementRef
 
   subjects: Subject[]
 
@@ -24,8 +24,8 @@ export class SubjectsComponent implements OnInit {
   }
 
   onAddSubject() {
-    const lessonName = this.lessonNameInputRef.nativeElement.value
-    this.subjectsService.addSubject(lessonName)
+    const subjectName = this.subjectNameInputRef.nativeElement.value
+    this.subjectsService.addSubject(subjectName)
   }
 
 }

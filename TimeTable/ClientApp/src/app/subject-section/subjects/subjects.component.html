@@ -8,21 +8,15 @@
                         placeholder = "Új tantárgy..."
                         id="name" 
                         class="form-control"
-                        #lessonNameInput>
+                        #subjectNameInput>
                 </div>
                 <div class="col-sm-2 form-group">
                     <button class="btn btn-success" type="submit" 
                     (click)=onAddSubject($event)>Hozzáadás</button>
                 </div>
             </div>
-
         </form>
-    </div>
-</div>
-<hr>
-
-<div class="row">
-    <div class="col-xs-10">
+        <hr>
         <ul class="list-group">
             <app-subject-item
                 class="list-group-item" 
@@ -32,4 +26,5 @@
         </ul>
     </div>
 </div>
+
 

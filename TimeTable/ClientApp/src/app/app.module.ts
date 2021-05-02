@@ -17,6 +17,7 @@ import { SubjectItemComponent } from './subject-section/subject-item/subject-ite
 import { SubjectsService } from './subject-section/subjects.service';
 import { LocationItemComponent } from './locations-section/location-item/location-item.component';
 import { LocationsService } from './locations-section/locations.service';
+import { EditModalComponent } from './shared/edit-modal/edit-modal.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { LocationsService } from './locations-section/locations.service';
     LessonsComponent,
     LocationsComponent,
     SubjectItemComponent,
-    LocationItemComponent
+    LocationItemComponent,
+    EditModalComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

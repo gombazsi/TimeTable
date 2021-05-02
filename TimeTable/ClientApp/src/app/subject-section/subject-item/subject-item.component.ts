@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Subject } from '../../models/subject';
+import { Subject } from '../../shared/models/subject';
 import { SubjectsService } from '../subjects.service';
 
 @Component({
@@ -11,13 +11,25 @@ export class SubjectItemComponent implements OnInit {
 
   @Input() subjectItem: Subject
 
+  editing: boolean = false
+
   constructor(private subjectService: SubjectsService) { }
 
   ngOnInit() {
   }
 
-  onDeleteLesson() {
+  onEditSubject() {
+    this.editing = true
+  }
+
+  onHandleClose() {
+    this.editing = false
+  }
+
+  onDeleteSubject() {
     this.subjectService.deleteSubject(this.subjectItem.subjectId)
   }
+
+  
 
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Location } from 'src/app/models/location';
+import { Location } from 'src/app/shared/models/location';
 import { LocationsService } from '../locations.service';
 
 @Component({
@@ -13,9 +13,19 @@ export class LocationItemComponent implements OnInit {
 
   constructor(private locationService: LocationsService) { }
 
+  editing = false
+
   ngOnInit() {
   }
 
+  onEditLocation() {
+    this.editing = true
+  }
+
+  onHandleClose() {
+    this.editing = false
+  }
+  
   onDeleteLocation() {
     this.locationService.deleteLocation(this.locationItem.locationId)
   }

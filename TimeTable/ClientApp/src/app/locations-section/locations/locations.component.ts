@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Location } from 'src/app/models/location';
+import { Location } from 'src/app/shared/models/location';
 import { LocationsService } from '../locations.service';
 
 @Component({

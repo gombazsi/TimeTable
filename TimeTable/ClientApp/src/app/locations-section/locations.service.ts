@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from "@angular/core";
-import { Location } from "../models/location";
+import { Location } from "../shared/models/location";
 
 @Injectable()
 export class LocationsService {
@@ -29,6 +29,13 @@ export class LocationsService {
             )
         )
         this.locationsChanged.emit(this.locations.slice())
+    }
+
+    changeLocation(id: number, newname: string) {
+        let locationToChange = this.locations.find(
+            (location: Location) => location.locationId === id
+        )
+        if(locationToChange) locationToChange.name = newname
     }
 
     deleteLocation(locationId: number) {

@@ -1,9 +1,16 @@
+<app-edit-modal 
+        [name]="subjectItem.name" 
+        [id]="subjectItem.subjectId" 
+        [type]="subjectItem"
+        *ngIf="editing"
+        (close)="onHandleClose()"></app-edit-modal>
+
 <div class="d-flex">
         <div class="mr-auto p-2">{{subjectItem.name}}</div>
         <div class="p-2">
-                <a style="cursor: pointer" class="link-secondary" (click)="onEditLesson()"> Szerkesztés </a>
+                <a style="cursor: pointer" class="link-secondary" (click)="onEditSubject()"> Szerkesztés </a>
         </div>
         <div class="p-2">
-                <a style="cursor: pointer" class="link-danger" (click)="onDeleteLesson()"> Törlés </a>
+                <a style="cursor: pointer" class="link-danger" (click)="onDeleteSubject()"> Törlés </a>
         </div>
 </div>

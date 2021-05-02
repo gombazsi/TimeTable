@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from "@angular/core";
-import { Subject } from "../models/subject";
+import { Subject } from "../shared/models/subject";
 
 @Injectable()
 export class SubjectsService {
@@ -29,6 +29,13 @@ export class SubjectsService {
             )
         )
         this.subjectsChanged.emit(this.subjects.slice())
+    }
+
+    changeSubject(id: number, newname: string) {
+        let subjectToChange = this.subjects.find(
+            (subject: Subject) => subject.subjectId === id
+        )
+        if(subjectToChange) subjectToChange.name = newname
     }
 
     deleteSubject(subjectId: number) {

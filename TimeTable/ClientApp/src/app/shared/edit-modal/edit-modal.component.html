@@ -1,0 +1,19 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="alert-box">
+    <h4>Tantárgy szerkeszése</h4>
+    <form action="">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <input 
+                    type="text"
+                    placeholder={{name}}
+                    class="form-control"
+                    #editedNameInput>
+            </div>
+        </div>
+    </form>
+    <div class="alert-box-actions">
+        <button class="btn btn-danger mr-1" (click)="onClose()">Mégse</button>
+        <button class="btn btn-success" (click)="onNameChanged()">Mentés</button>
+    </div>
+</div>

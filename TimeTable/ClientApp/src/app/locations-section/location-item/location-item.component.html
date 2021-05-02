@@ -1,3 +1,10 @@
+<app-edit-modal 
+        [name]="locationItem.name" 
+        [id]="locationItem.locationId"
+        [type]="locationItem"
+        *ngIf="editing"
+        (close)="onHandleClose()"></app-edit-modal>
+
 <div class="d-flex">
     <div class="mr-auto p-2">{{locationItem.name}}</div>
     <div class="p-2">
