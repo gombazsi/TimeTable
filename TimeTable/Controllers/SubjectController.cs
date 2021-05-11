@@ -12,7 +12,7 @@ namespace TimeTable.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class SubjectController : ControllerBase
     {
         private readonly ISubjectService subjectService;

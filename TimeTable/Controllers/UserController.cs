@@ -22,7 +22,6 @@ namespace TimeTable.Controllers
         [HttpPost("signin")]
         public async Task<string> SignIn(SignInDTO signInDTO)
         {
-            var Body = HttpContext.Request.Body;
             return await userService.SignInAsync(signInDTO);
         }
         [Authorize]

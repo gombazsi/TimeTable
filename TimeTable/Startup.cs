@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 using TimeTable.Data;
 using TimeTable.Models;
 using TimeTable.Services;
@@ -36,7 +38,23 @@ namespace TimeTable
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/api/user/signin";
+                options.Cookie.Name = "TimeTable.AuthCookie";
+                options.Cookie.HttpOnly = true;
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = redirectContext =>
+                    {
+                        redirectContext.HttpContext.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             services.AddCors(options =>
             {
@@ -48,7 +66,7 @@ namespace TimeTable
             /*services.AddAuthentication()
                 .AddIdentityServerJwt();*/
             services.AddControllersWithViews();
-           // services.AddRazorPages();
+            //services.AddRazorPages();
 
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<ILocationService, LocationService>();
@@ -66,6 +84,7 @@ namespace TimeTable
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("AllowAllOrigins");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -77,7 +96,6 @@ namespace TimeTable
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

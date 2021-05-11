@@ -12,7 +12,7 @@ namespace TimeTable.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class LocationController : ControllerBase
     {
         private readonly ILocationService locationService;
