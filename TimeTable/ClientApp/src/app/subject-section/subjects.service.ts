@@ -1,7 +1,6 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
-import { throwError } from "rxjs";
-import { catchError, map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 import { ISubject } from "../shared/interfaces/subject-interface";
 import { Subject } from "../shared/models/subject";
 
@@ -42,20 +41,41 @@ export class SubjectsService {
             requestParam,
             {
                 headers: new HttpHeaders({
-                    'Content-Type':  'application/json',
+                    'Content-Type': 'application/json',
                 })
             }
         )
     }
 
     changeSubject(id: number, newname: string) {
-
+        const requestParam = '"'.concat(newname).concat('"')
+        return this.http.put(
+            this.url + "/" + id,
+            requestParam,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json',
+                })
+            }
+        )
     }
 
     deleteSubject(subjectId: number) {
         const requestParam = subjectId
-        return this.http.delete(
-            this.url + ' /' + requestParam
-        )
+        return this.http
+            .delete(this.url + "/" + requestParam, {
+                observe: 'events',
+                responseType: 'text'
+            })
+            .pipe(
+                tap(event => {
+                    if (event.type === HttpEventType.Sent) {
+                        console.log("Delete request was sent.")
+                    }
+                    if (event.type === HttpEventType.Response) {
+                        console.log(event.body);
+                    }
+                })
+            );
     }
 }

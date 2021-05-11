@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Location } from 'src/app/shared/models/location';
-import { LocationsService } from '../locations.service';
 
 @Component({
   selector: 'app-location-item',
@@ -10,8 +9,10 @@ import { LocationsService } from '../locations.service';
 export class LocationItemComponent implements OnInit {
 
   @Input() locationItem: Location
+  @Output() locationItemChanged = new EventEmitter<Location>()
+  @Output() locationItemDeleted = new EventEmitter<Location>()
 
-  constructor(private locationService: LocationsService) { }
+  constructor() { }
 
   editing = false
 
@@ -27,7 +28,10 @@ export class LocationItemComponent implements OnInit {
   }
   
   onDeleteLocation() {
-    this.locationService.deleteLocation(this.locationItem.locationId)
+    this.locationItemDeleted.emit(this.locationItem)
   }
 
+  onChangeLocation(locationItem: Location) {
+    this.locationItemChanged.emit(locationItem)
+  }
 }

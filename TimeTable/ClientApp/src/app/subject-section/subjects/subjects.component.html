@@ -17,13 +17,21 @@
             </div>
         </form>
         <hr>
-        <p *ngIf="isFetching">Adatok betöltése...</p>
-        <p *ngIf="subjects.length < 1 && !isFetching">Nem lettek még hozzáadva tantárgyak!</p>
+
+        <div class="alert alert-danger" *ngIf="error && !isFetching">
+            <h1>Hiba történt!</h1>
+            <p>{{ error }}</p>
+        </div>
+
+        <p *ngIf="isFetching && !error">Adatok betöltése...</p>
+        <p *ngIf="subjects.length < 1 && !isFetching && !error">Nem lettek még hozzáadva tantárgyak!</p>
         <ul class="list-group">
             <app-subject-item
                 class="list-group-item" 
                 *ngFor = "let subject of subjects" 
                 [subjectItem] = "subject"
+                (subjectItemDeleted) = "onDeleteSubject($event)"
+                (subjectItemChanged) = "onChangeSubject($event)"
             ></app-subject-item>
         </ul>
     </div>

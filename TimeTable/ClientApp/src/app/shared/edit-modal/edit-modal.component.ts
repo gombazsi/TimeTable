@@ -1,6 +1,4 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { LocationsService } from 'src/app/locations-section/locations.service';
-import { SubjectsService } from 'src/app/subject-section/subjects.service';
 import { Location } from '../models/location';
 import { Subject } from '../models/subject';
 
@@ -15,19 +13,26 @@ export class EditModalComponent implements OnInit {
   @Input() id: string
   @Input() type: object
   @Output() close = new EventEmitter<void>()
+  @Output() subjectNameChanged = new EventEmitter<Subject>()
+  @Output() locationNameChanged = new EventEmitter<Location>()
 
   @ViewChild('editedNameInput', { static: false }) editedNameInput: ElementRef
 
-  constructor(
-    private subjectsService: SubjectsService,
-    private locationsService: LocationsService) { }
+  constructor() { }
 
   ngOnInit() { }
 
   onNameChanged() {
+    console.log('edit-modal')
     const newName = this.editedNameInput.nativeElement.value
-    if(this.type instanceof Subject) this.subjectsService.changeSubject(+this.id, newName)
-    if(this.type instanceof Location) this.locationsService.changeLocation(+this.id, newName)
+    if (this.type instanceof Subject) {
+      this.type.name = newName
+      this.subjectNameChanged.emit(this.type)
+    }
+    if (this.type instanceof Location) {
+      this.type.name = newName
+      this.locationNameChanged.emit(this.type)
+    }
   }
 
   onClose() {

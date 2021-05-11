@@ -1,45 +1,81 @@
+import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
+import { map, tap } from "rxjs/operators";
+import { ILocation } from "../shared/interfaces/location-interface";
 import { Location } from "../shared/models/location";
 
 @Injectable()
 export class LocationsService {
 
-    locationsChanged = new EventEmitter<Location[]>()
+    locationsChanged = new EventEmitter<void>()
+    url: string = 'https://orarend.azurewebsites.net/api/Location/locations'
 
-    private locations: Location[] = [
-        new Location(
-            11,
-            "Bolyai terem"
-        ),
-        new Location(
-            12,
-            "Ady terem"
-        )
-    ]
+    constructor(private http: HttpClient) { }
 
     getLocations() {
-        return this.locations.slice()
+        return this.http
+            .get<{ [key: number]: ILocation }>(
+                this.url
+            )
+            .pipe(
+                map(responseData => {
+                    const locationArray: Location[] = []
+                    for (const key in responseData) {
+                        if (responseData.hasOwnProperty(key)) {
+                            locationArray.push(
+                                new Location(
+                                    responseData[key].locationId,
+                                    responseData[key].name
+                                )
+                            )
+                        }
+                    }
+                    return locationArray
+                }))
     }
 
     addLocation(locationName: string) {
-        this.locations.push(
-            new Location(
-                0,
-                locationName
-            )
+        const requestParam = '"'.concat(locationName).concat('"')
+        return this.http.post(
+            this.url,
+            requestParam,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json',
+                })
+            }
         )
-        this.locationsChanged.emit(this.locations.slice())
     }
 
     changeLocation(id: number, newname: string) {
-        let locationToChange = this.locations.find(
-            (location: Location) => location.locationId === id
+        const requestParam = '"'.concat(newname).concat('"')
+        return this.http.put(
+            this.url + "/" + id,
+            requestParam,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type': 'application/json',
+                })
+            }
         )
-        if(locationToChange) locationToChange.name = newname
     }
 
     deleteLocation(locationId: number) {
-        this.locations = this.locations.filter( x => x.locationId != locationId)
-        this.locationsChanged.emit(this.locations.slice())
+        const requestParam = locationId
+        return this.http
+            .delete(this.url + "/" + requestParam, {
+                observe: 'events',
+                responseType: 'text'
+            })
+            .pipe(
+                tap(event => {
+                    if (event.type === HttpEventType.Sent) {
+                        console.log("Delete request was sent.")
+                    }
+                    if (event.type === HttpEventType.Response) {
+                        console.log(event.body);
+                    }
+                })
+            );
     }
 }
