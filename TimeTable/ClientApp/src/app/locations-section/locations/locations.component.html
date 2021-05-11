@@ -17,19 +17,30 @@
             </div>
 
         </form>
-    </div>
-</div>
-<hr>
+        <hr>
 
-<div class="row">
-    <div class="col-xs-10">
+        <div class="alert alert-danger" *ngIf="error && !isFetching">
+            <h1>Hiba történt!</h1>
+            <p>{{ error }}</p>
+        </div>
+
+        <p *ngIf="isFetching && !error">Adatok betöltése...</p>
+        <p *ngIf="locations.length < 1 && !isFetching && !error">Nem lettek még hozzáadva helyszínek!</p>
         <ul class="list-group">
             <app-location-item
                 class="list-group-item" 
                 *ngFor = "let location of locations" 
                 [locationItem] = "location"
+                (locationItemDeleted) = "onDeleteLocation($event)"
+                (locationItemChanged) = "onChangeLocation($event)"
             ></app-location-item>
         </ul>
+        
+
     </div>
 </div>
+
+
+
+
 

@@ -3,6 +3,7 @@
         [id]="subjectItem.subjectId" 
         [type]="subjectItem"
         *ngIf="editing"
+        (subjectNameChanged) = "onChangeSubject($event)"
         (close)="onHandleClose()"></app-edit-modal>
 
 <div class="d-flex">

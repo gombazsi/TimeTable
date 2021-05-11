@@ -10,10 +10,10 @@ import { SubjectsService } from '../subjects.service';
 export class SubjectsComponent implements OnInit {
 
   @ViewChild('subjectNameInput', { static: false }) subjectNameInputRef: ElementRef
-  @Output()
 
   subjects: Subject[] = []
   isFetching: boolean = false
+  error = null
 
   constructor(private subjectsService: SubjectsService) { }
 
@@ -23,7 +23,12 @@ export class SubjectsComponent implements OnInit {
       subjects => {
         this.isFetching = false
         this.subjects = subjects
-      })
+      },
+      error => {
+        this.isFetching = false
+        this.error = error.message
+      }
+    )
   }
 
   onAddSubject() {
@@ -36,12 +41,47 @@ export class SubjectsComponent implements OnInit {
           new Subject(
             +result,
             subjectName
-        ))
+          ))
+      },
+      error => {
+        this.isFetching = false
+        this.error = error.message
       }
     )
-
-
-    
   }
 
+  onChangeSubject(subjectItem: Subject) {
+    this.subjectsService.changeSubject(subjectItem.subjectId, subjectItem.name)
+      .subscribe(
+        result => {
+          console.log(result)
+          const changeIndex = this.subjects.findIndex(
+            subject => subject.subjectId === subjectItem.subjectId)
+            this.subjects[changeIndex].name = subjectItem.name
+        },
+        error => {
+          this.isFetching = false
+          this.error = error.message
+        }
+    )
+  }
+
+  onDeleteSubject(subjectItem: Subject) {
+    this.subjectsService.deleteSubject(subjectItem.subjectId)
+      .subscribe(
+        result => {
+          console.log(result)
+          const deleteIndex = this.subjects.findIndex(
+            subject => subject.subjectId === subjectItem.subjectId)
+
+          if (deleteIndex > -1) {
+            this.subjects.splice(deleteIndex, 1)
+          }
+        },
+        error => {
+          this.isFetching = false
+          this.error = error.message
+        }
+      )
+  }
 }

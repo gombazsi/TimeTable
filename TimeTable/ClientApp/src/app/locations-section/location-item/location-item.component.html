@@ -3,6 +3,7 @@
         [id]="locationItem.locationId"
         [type]="locationItem"
         *ngIf="editing"
+        (locationNameChanged) = "onChangeLocation($event)"
         (close)="onHandleClose()"></app-edit-modal>
 
 <div class="d-flex">

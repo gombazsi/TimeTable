@@ -1,6 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Subject } from '../../shared/models/subject';
-import { SubjectsService } from '../subjects.service';
 
 @Component({
   selector: 'app-subject-item',
@@ -10,10 +9,12 @@ import { SubjectsService } from '../subjects.service';
 export class SubjectItemComponent implements OnInit {
 
   @Input() subjectItem: Subject
+  @Output() subjectItemChanged = new EventEmitter<Subject>()
+  @Output() subjectItemDeleted = new EventEmitter<Subject>()
 
   editing: boolean = false
 
-  constructor(private subjectService: SubjectsService) { }
+  constructor() { }
 
   ngOnInit() {
   }
@@ -27,9 +28,10 @@ export class SubjectItemComponent implements OnInit {
   }
 
   onDeleteSubject() {
-    this.subjectService.deleteSubject(this.subjectItem.subjectId)
+    this.subjectItemDeleted.emit(this.subjectItem)
   }
 
-  
-
+  onChangeSubject(subjectItem: Subject) {
+    this.subjectItemChanged.emit(subjectItem)
+  }
 }
