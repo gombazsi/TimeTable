@@ -17,6 +17,8 @@
             </div>
         </form>
         <hr>
+        <p *ngIf="isFetching">Adatok betöltése...</p>
+        <p *ngIf="subjects.length < 1 && !isFetching">Nem lettek még hozzáadva tantárgyak!</p>
         <ul class="list-group">
             <app-subject-item
                 class="list-group-item" 

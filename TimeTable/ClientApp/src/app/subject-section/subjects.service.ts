@@ -1,45 +1,61 @@
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
+import { throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { ISubject } from "../shared/interfaces/subject-interface";
 import { Subject } from "../shared/models/subject";
 
 @Injectable()
 export class SubjectsService {
 
-    subjectsChanged = new EventEmitter<Subject[]>()
+    subjectsChanged = new EventEmitter<void>()
+    url: string = 'https://orarend.azurewebsites.net/api/Subject/subjects'
 
-    private subjects: Subject[] = [
-        new Subject(
-            11,
-            "magyar"
-        ),
-        new Subject(
-            12,
-            "matek"
-        )
-    ]
+    constructor(private http: HttpClient) { }
 
     getSubjects() {
-        return this.subjects.slice()
+        return this.http
+            .get<{ [key: number]: ISubject }>(
+                this.url
+            )
+            .pipe(
+                map(responseData => {
+                    const subjectArray: Subject[] = []
+                    for (const key in responseData) {
+                        if (responseData.hasOwnProperty(key)) {
+                            subjectArray.push(
+                                new Subject(
+                                    responseData[key].subjectId,
+                                    responseData[key].name
+                                )
+                            )
+                        }
+                    }
+                    return subjectArray
+                }))
     }
 
     addSubject(subjectName: string) {
-        this.subjects.push(
-            new Subject(
-                0,
-                subjectName
-            )
+        const requestParam = '"'.concat(subjectName).concat('"')
+        return this.http.post(
+            this.url,
+            requestParam,
+            {
+                headers: new HttpHeaders({
+                    'Content-Type':  'application/json',
+                })
+            }
         )
-        this.subjectsChanged.emit(this.subjects.slice())
     }
 
     changeSubject(id: number, newname: string) {
-        let subjectToChange = this.subjects.find(
-            (subject: Subject) => subject.subjectId === id
-        )
-        if(subjectToChange) subjectToChange.name = newname
+
     }
 
     deleteSubject(subjectId: number) {
-        this.subjects = this.subjects.filter( x => x.subjectId != subjectId)
-        this.subjectsChanged.emit(this.subjects.slice())
+        const requestParam = subjectId
+        return this.http.delete(
+            this.url + ' /' + requestParam
+        )
     }
 }

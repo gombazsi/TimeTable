@@ -45,7 +45,7 @@ import { EditModalComponent } from './shared/edit-modal/edit-modal.component';
     ])
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
+    //{ provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     SubjectsService,
     LocationsService
   ],
