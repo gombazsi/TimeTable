@@ -38,6 +38,13 @@ namespace TimeTable
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+                );
+            });
+
             /*services.AddAuthentication()
                 .AddIdentityServerJwt();*/
             services.AddControllersWithViews();
@@ -69,6 +76,7 @@ namespace TimeTable
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
