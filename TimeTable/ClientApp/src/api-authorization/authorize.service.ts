@@ -1,7 +1,9 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
+import { SignIn } from 'src/app/shared/models/signin';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
 
 export type IAuthenticationResult =
@@ -37,15 +39,48 @@ export interface IUser {
   providedIn: 'root'
 })
 export class AuthorizeService {
-  // By default pop ups are disabled because they don't work properly on Edge.
-  // If you want to enable pop up authentication simply set this flag to false.
 
-  private popUpDisabled = true;
-  private userManager: UserManager;
+  private readonly baseUri:string="https://orarend.azurewebsites.net/api/"
+
+  
   private userSubject: BehaviorSubject<IUser | null> = new BehaviorSubject(null);
+  
+  constructor(private httpClient:HttpClient,private userManager: UserManager) {}
+
+  public async SignIn(signIn:SignIn){
+    await this.httpClient.post<string>(this.baseUri+"User/signin",signIn,
+    {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+    })
+    }).toPromise().catch(err=>
+      console.log(err)
+    );
+  }
+
+  public async SignOut(){
+    await this.httpClient.get(this.baseUri+"User/signout").toPromise();
+  }
+
+  public async Register(signIn: SignIn){
+    await this.httpClient.post<string>(this.baseUri+"User/register",signIn,{
+      headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+      })
+  }).toPromise().catch(err=>console.log(err));
+  }
 
   public isAuthenticated(): Observable<boolean> {
     return this.getUser().pipe(map(u => !!u));
+
+  }
+
+
+  private getUserFromStorage(): Observable<IUser> {
+    return from(this.ensureUserManagerInitialized())
+      .pipe(
+        mergeMap(() => this.userManager.getUser()),
+        map(u => u && u.profile));
   }
 
   public getUser(): Observable<IUser | null> {
@@ -54,6 +89,36 @@ export class AuthorizeService {
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
   }
+
+  private async ensureUserManagerInitialized(): Promise<void> {
+    if (this.userManager !== undefined) {
+      return;
+    }
+
+    const response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
+    if (!response.ok) {
+      throw new Error(`Could not load settings for '${ApplicationName}'`);
+    }
+
+    const settings: any = await response.json();
+    settings.automaticSilentRenew = true;
+    settings.includeIdTokenInSilentRenew = true;
+    this.userManager = new UserManager(settings);
+
+    this.userManager.events.addUserSignedOut(async () => {
+      await this.userManager.removeUser();
+      this.userSubject.next(null);
+    });
+  }
+
+  // By default pop ups are disabled because they don't work properly on Edge.
+  // If you want to enable pop up authentication simply set this flag to false.
+
+  /*private popUpDisabled = true;
+
+  
+
+  
 
   public getAccessToken(): Observable<string> {
     return from(this.ensureUserManagerInitialized())
@@ -169,31 +234,7 @@ export class AuthorizeService {
     return { status: AuthenticationResultStatus.Redirect };
   }
 
-  private async ensureUserManagerInitialized(): Promise<void> {
-    if (this.userManager !== undefined) {
-      return;
-    }
+ 
 
-    const response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
-    if (!response.ok) {
-      throw new Error(`Could not load settings for '${ApplicationName}'`);
-    }
-
-    const settings: any = await response.json();
-    settings.automaticSilentRenew = true;
-    settings.includeIdTokenInSilentRenew = true;
-    this.userManager = new UserManager(settings);
-
-    this.userManager.events.addUserSignedOut(async () => {
-      await this.userManager.removeUser();
-      this.userSubject.next(null);
-    });
-  }
-
-  private getUserFromStorage(): Observable<IUser> {
-    return from(this.ensureUserManagerInitialized())
-      .pipe(
-        mergeMap(() => this.userManager.getUser()),
-        map(u => u && u.profile));
-  }
+  */
 }

@@ -6,14 +6,17 @@ import { LogoutComponent } from './logout/logout.component';
 import { RouterModule } from '@angular/router';
 import { ApplicationPaths } from './api-authorization.constants';
 import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import {RegisterComponent} from './register/register.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forChild(
       [
-        { path: ApplicationPaths.Register, component: LoginComponent },
+        { path: ApplicationPaths.Register, component: RegisterComponent },
         { path: ApplicationPaths.Profile, component: LoginComponent },
         { path: ApplicationPaths.Login, component: LoginComponent },
         { path: ApplicationPaths.LoginFailed, component: LoginComponent },
@@ -24,7 +27,7 @@ import { HttpClientModule } from '@angular/common/http';
       ]
     )
   ],
-  declarations: [LoginMenuComponent, LoginComponent, LogoutComponent],
-  exports: [LoginMenuComponent, LoginComponent, LogoutComponent]
+  declarations: [LoginMenuComponent, LoginComponent, LogoutComponent,RegisterComponent],
+  exports: [LoginMenuComponent, LoginComponent, LogoutComponent,RegisterComponent]
 })
 export class ApiAuthorizationModule { }

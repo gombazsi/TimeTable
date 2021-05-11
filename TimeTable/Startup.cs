@@ -48,11 +48,12 @@ namespace TimeTable
             /*services.AddAuthentication()
                 .AddIdentityServerJwt();*/
             services.AddControllersWithViews();
-            services.AddRazorPages();
+           // services.AddRazorPages();
 
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddSwaggerGen();
             // In production, the Angular files will be served from this directory

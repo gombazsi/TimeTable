@@ -20,6 +20,16 @@ namespace TimeTable.Data
             
         }
 
+        /*protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Subject>()
+                .HasOne(s => s.A)
+                .WithMany(t => t.Templates)
+                .HasForeignKey(temp => temp.TeacherId);
+        }*/
+
         public DbSet<Subject> Subject { get; set; }
         public DbSet<Location> Location { get; set; }
         public DbSet<Lesson> Lesson { get; set; }

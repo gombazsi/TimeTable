@@ -14,15 +14,15 @@ import { LogoutActions, ApplicationPaths, ReturnUrlType } from '../api-authoriza
   styleUrls: ['./logout.component.css']
 })
 export class LogoutComponent implements OnInit {
-  public message = new BehaviorSubject<string>(null);
+  /*public message = new BehaviorSubject<string>(null);
 
   constructor(
     private authorizeService: AuthorizeService,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { }
+    private router: Router) { }*/
 
   async ngOnInit() {
-    const action = this.activatedRoute.snapshot.url[1];
+    /*const action = this.activatedRoute.snapshot.url[1];
     switch (action.path) {
       case LogoutActions.Logout:
         if (!!window.history.state.local) {
@@ -41,10 +41,10 @@ export class LogoutComponent implements OnInit {
         break;
       default:
         throw new Error(`Invalid action '${action}'`);
-    }
+    }*/
   }
 
-  private async logout(returnUrl: string): Promise<void> {
+  /*private async logout(returnUrl: string): Promise<void> {
     const state: INavigationState = { returnUrl };
     const isauthenticated = await this.authorizeService.isAuthenticated().pipe(
       take(1)
@@ -99,14 +99,14 @@ export class LogoutComponent implements OnInit {
     // a relative url or an absolute url
     if (fromQuery &&
       !(fromQuery.startsWith(`${window.location.origin}/`) ||
-        /\/[^\/].*/.test(fromQuery))) {
+        /\/[^\/].*//*.test(fromQuery))) {
       // This is an extra check to prevent open redirects.
       throw new Error('Invalid return url. The return url needs to have the same origin as the current page.');
     }
     return (state && state.returnUrl) ||
       fromQuery ||
       ApplicationPaths.LoggedOut;
-  }
+  }*/
 }
 
 interface INavigationState {
