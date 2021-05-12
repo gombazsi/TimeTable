@@ -26,13 +26,15 @@ namespace TimeTable.Controllers
         [HttpGet("lessons")]
         public async Task<List<LessonDTO>> GetLessons()
         {
-            return await lessonService.GetLessonsAsync();
+            string userName = HttpContext.User?.Identity.Name;
+            return await lessonService.GetLessonsAsync(userName);
         }
 
         [HttpPost("lessons")]
         public async Task<int> PostLesson([FromBody] LessonModDTO lesson) 
         {
-            return await lessonService.PostLessonsAsync(lesson);
+            string userName = HttpContext.User?.Identity.Name;
+            return await lessonService.PostLessonsAsync(lesson,userName);
         }
 
         [HttpPut("lessons/{id}")]

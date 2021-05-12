@@ -1,16 +1,13 @@
 <ul class="navbar-nav" *ngIf="isAuthenticated ">
     <li class="nav-item">
-        <a  class="nav-link text-dark" [routerLink]='["/authentication/profile"]' title="Manage">Hello</a>
-    </li>
-    <li class="nav-item">
-        <a  class="nav-link text-dark" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">Logout</a>
+        <div class="nav-item" (click)="logout()" style="cursor:pointer">Kijelentkezés</div>
     </li>
 </ul>
 <ul class="navbar-nav" *ngIf="!(isAuthenticated )">
   <li class="nav-item">
-        <a class="nav-link text-dark" [routerLink]='["/authentication/register"]'>Register</a>
+        <a class="nav-link text-dark" [routerLink]='["/authentication/register"]'>Regisztráció</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" [routerLink]='["/authentication/login"]'>Login</a>
+        <a class="nav-link text-dark" [routerLink]='["/authentication/login"]'>Bejelentkezés</a>
     </li>
 </ul>

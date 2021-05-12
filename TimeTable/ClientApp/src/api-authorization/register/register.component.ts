@@ -24,7 +24,7 @@ export class RegisterComponent implements OnInit {
   }
 
 
-  private async register(): Promise<void> {
+  public async register(): Promise<void> {
     console.log(this.userForm.value)
     this.authorizeService.Register( this.userForm.value)
   }  

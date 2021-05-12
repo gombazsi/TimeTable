@@ -10,9 +10,9 @@ namespace TimeTable.Services.Interfaces
     public interface ILessonService
     {
         Task<LessonDTO> GetLessonAsync(int id);
-        Task<int> PostLessonsAsync(LessonModDTO lesson);
+        Task<int> PostLessonsAsync(LessonModDTO lesson, string userName);
         Task PutLessonAsync(int id, LessonModDTO lesson);
         Task DeleteLessonAsync(int id);
-        Task<List<LessonDTO>> GetLessonsAsync();
+        Task<List<LessonDTO>> GetLessonsAsync(string userName);
     }
 }

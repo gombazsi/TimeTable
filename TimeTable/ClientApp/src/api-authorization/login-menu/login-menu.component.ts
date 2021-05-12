@@ -9,12 +9,18 @@ import { map, tap } from 'rxjs/operators';
   styleUrls: ['./login-menu.component.css']
 })
 export class LoginMenuComponent implements OnInit {
-  public isAuthenticated: boolean;
+  public isAuthenticated :boolean;
 
   constructor(private authorizeService: AuthorizeService) { }
 
   ngOnInit() {
-    this.isAuthenticated = this.authorizeService.isAuthenticated();
-    console.log(this.isAuthenticated); 
+    this.authorizeService.isAuthenticated.subscribe((value)=>{
+      this.isAuthenticated=value;
+      console.log(this.isAuthenticated); 
+    })    
+  }
+
+  public logout(){
+    this.authorizeService.SignOut()
   }
 }

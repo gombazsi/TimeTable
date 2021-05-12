@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   }
 
 
-  private async login(): Promise<void> {
+  public async login(): Promise<void> {
     console.log(this.userForm.value)
     this.authorizeService.SignIn( this.userForm.value)
   }  

@@ -20,13 +20,13 @@ namespace TimeTable.Controllers
             this.userService = userService;
         }
         [HttpPost("signin")]
-        public async Task<string> SignIn(SignInDTO signInDTO)
+        public async Task<string> LogIn(SignInDTO signInDTO)
         {
             return await userService.SignInAsync(signInDTO);
         }
-        [Authorize]
+        //[Authorize]
         [HttpGet("signout")]
-        public async Task SignOut()
+        public async Task LogOut()
         {
             await userService.SignOutAsync();
         }

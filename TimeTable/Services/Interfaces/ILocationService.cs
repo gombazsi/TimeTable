@@ -8,8 +8,8 @@ namespace TimeTable.Services.Interfaces
 {
     public interface ILocationService
     {
-        Task<List<Location>> GetLocationsAsync();
-        Task<int> PostLocationAsync(string name);
+        Task<List<Location>> GetLocationsAsync(string userName);
+        Task<int> PostLocationAsync(string name, string userName);
         Task PutLocationAsync(int id, string name);
         Task DeleteLocationAsync(int id);
         Task<Location> GetLocation(int id);

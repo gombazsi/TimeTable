@@ -24,13 +24,15 @@ namespace TimeTable.Controllers
         [HttpGet("subjects")]
         public async Task<List<Subject>> GetSubjects()
         {
-            return await subjectService.GetSubjectsAsync();
+            string userName = HttpContext.User?.Identity.Name;
+            return await subjectService.GetSubjectsAsync(userName);
         }
 
         [HttpPost("subjects")]
         public async Task<int> PostSubject([FromBody] string name)
         {
-            return await subjectService.PostSubjectAsync(name);
+            string userName = HttpContext.User?.Identity.Name;
+            return await subjectService.PostSubjectAsync(name,userName);
         }
 
         [HttpPut("subjects/{id}")]

@@ -50,14 +50,17 @@ export class AuthorizeService {
         'Content-Type':  'application/json',
         'Accept': 'tesxt/plain'
     })
-    }).toPromise().catch(err=>
+    }).toPromise()
+    .then(res=>this.isAuthenticated.)
+    .catch(err=>
       console.log(err)
     );
 
   }
 
   public async SignOut(){
-    await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>this.cookieService.delete('TimeTable.AuthCookie'));
+    console.log("signing out")
+    await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>this.cookieService.delete('TimeTable.AuthCookie')).catch(err=>console.log(err));
   }
 
   public async Register(signIn: SignIn){
@@ -70,9 +73,13 @@ export class AuthorizeService {
   }).toPromise().catch(err=>console.log(err));
   }
 
-  public isAuthenticated(): boolean{
-    return this.cookieService.check('TimeTable.AuthCookie');
-  }
+  /*public isAuthenticated=new Observable<boolean> ((observer)=>{
+    var ret= this.cookieService.get('TimeTable.AuthCookie');
+    console.log('isauth',ret);
+    observer.next(!!ret)
+  })*/
+
+  public isAuthenticated:Observable<boolean>
 
 
   /*private getUserFromStorage(): Observable<IUser> {

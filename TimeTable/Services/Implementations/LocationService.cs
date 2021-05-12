@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeTable.Data;
+using TimeTable.Models;
 using TimeTable.Models.DAL;
 using TimeTable.Services.Interfaces;
 
@@ -12,10 +14,12 @@ namespace TimeTable.Services.Implementations
     public class LocationService : ILocationService
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public LocationService(ApplicationDbContext dbContext)
+        public LocationService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             this.dbContext = dbContext;
+            this.userManager = userManager;
         }
         public async Task DeleteLocationAsync(int id)
         {
@@ -29,15 +33,19 @@ namespace TimeTable.Services.Implementations
             return await dbContext.Location.FirstOrDefaultAsync(location => location.LocationId == id);
         }
 
-        public Task<List<Location>> GetLocationsAsync()
+        public Task<List<Location>> GetLocationsAsync(string userName)
         {
-            return dbContext.Location.ToListAsync();
+            return dbContext.Location
+                .Include(location => location.ApplicationUser)
+                .Where(l => l.ApplicationUser.UserName == (userName ?? l.ApplicationUser.UserName))
+                .ToListAsync();
         }
 
-        public async Task<int> PostLocationAsync(string name)
+        public async Task<int> PostLocationAsync(string name, string userName)
         {
             Location location = new Location { Name = name };
             dbContext.Location.Add(location);
+            location.ApplicationUser = await userManager.FindByNameAsync(userName);
             await dbContext.SaveChangesAsync();
             return location.LocationId;
         }

@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TimeTable.Data;
+using TimeTable.Models;
 using TimeTable.Models.DAL;
 using TimeTable.Services.Interfaces;
 
@@ -12,9 +14,11 @@ namespace TimeTable.Services.Implementations
     public class SubjectService : ISubjectService
     {
         private readonly ApplicationDbContext dbContext;
-        public SubjectService(ApplicationDbContext dbContext)
+        private readonly UserManager<ApplicationUser> userManager;
+        public SubjectService(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             this.dbContext = dbContext;
+            this.userManager = userManager;
         }
 
         public async Task DeleteSubjectAsync(int id)
@@ -29,15 +33,19 @@ namespace TimeTable.Services.Implementations
             return await dbContext.Subject.FirstOrDefaultAsync(subject => subject.SubjectId == id);
         }
 
-        public async Task<List<Subject>> GetSubjectsAsync()
+        public async Task<List<Subject>> GetSubjectsAsync(string userName)
         {
-            return await dbContext.Subject.ToListAsync();
+            return await dbContext.Subject
+                .Include(subject => subject.ApplicationUser)
+                .Where(s => s.ApplicationUser.UserName == (userName ?? s.ApplicationUser.UserName))
+                .ToListAsync();
         }
 
-        public async Task<int> PostSubjectAsync(string name)
+        public async Task<int> PostSubjectAsync(string name, string userName)
         {
             Subject subject = new Subject { Name = name };
             dbContext.Subject.Add(subject);
+            subject.ApplicationUser = await userManager.FindByNameAsync(userName);
             await dbContext.SaveChangesAsync();
             return subject.SubjectId;
         }
