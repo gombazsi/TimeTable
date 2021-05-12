@@ -51,7 +51,7 @@ export class AuthorizeService {
         'Accept': 'tesxt/plain'
     })
     }).toPromise()
-    .then(res=>this.isAuthenticated.)
+    .then(res=>console.log(res))
     .catch(err=>
       console.log(err)
     );
