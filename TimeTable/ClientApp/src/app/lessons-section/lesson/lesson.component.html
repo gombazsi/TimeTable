@@ -1,0 +1,10 @@
+<!-- <p>lesson works!</p>
+<p> {{lessonItem.dayOfWeek}}</p>
+<p> {{lessonItem.lessonNumber}}</p> -->
+
+<a class="btn btn-default btn-block">
+    <h4>{{lessonItem.dayOfWeek}}</h4>
+    <p>{{lessonItem.lessonNumber}}</p>
+    <a *ngIf="lessonItem.lessonId">Törlés</a>
+</a>
+
