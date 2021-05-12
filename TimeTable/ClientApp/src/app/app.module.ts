@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -9,7 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.module';
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
-import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
+//import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { SubjectsComponent } from './subject-section/subjects/subjects.component';
 import { LessonsComponent } from './lessons-section/lessons/lessons.component';
 import { LocationsComponent } from './locations-section/locations/locations.component';
@@ -19,6 +19,8 @@ import { LocationItemComponent } from './locations-section/location-item/locatio
 import { LocationsService } from './locations-section/locations.service';
 import { EditModalComponent } from './shared/edit-modal/edit-modal.component';
 import { LessonComponent } from './lessons-section/lesson/lesson.component';
+import { AuthorizeService } from 'src/api-authorization/authorize.service';
+import { UserManager } from 'oidc-client';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { LessonComponent } from './lessons-section/lesson/lesson.component';
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
+    ReactiveFormsModule,
     FormsModule,
     ApiAuthorizationModule,
     RouterModule.forRoot([
@@ -49,7 +52,9 @@ import { LessonComponent } from './lessons-section/lesson/lesson.component';
   providers: [
     //{ provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true },
     SubjectsService,
-    LocationsService
+    LocationsService,
+    AuthorizeService,
+    UserManager
   ],
   bootstrap: [AppComponent]
 })

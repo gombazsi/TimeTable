@@ -14,5 +14,7 @@ namespace TimeTable.Models.DAL
         public Subject Subject { get; set; }
         public int LocationId { get; set; }
         public Location Location { get; set; }
+        public string ApplicationUserId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

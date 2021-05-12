@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace TimeTable.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
+    //[Authorize]
     public class LessonController : ControllerBase
     {
         private readonly ILessonService lessonService;
@@ -20,11 +22,6 @@ namespace TimeTable.Controllers
             this.lessonService = lessonService;
         }
 
-        [HttpGet("test")]
-        public async Task<string> test()
-        {
-            return "test";
-        }
 
         [HttpGet("lessons")]
         public async Task<List<LessonDTO>> GetLessons()

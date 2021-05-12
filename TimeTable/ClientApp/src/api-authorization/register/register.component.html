@@ -4,11 +4,11 @@
       
       <input placeholder="felhasználónév" type="text" formControlName="UserName" >
   
-      <input type="password" formControlName="Password" placeholder="jelszó" (keyup.enter)="login()">
+      <input type="password" formControlName="Password" placeholder="jelszó" (keyup.enter)="register()">
 
       <label for="rememberme">Adatok megjegyzése</label>
       <input id="rememberme" type="checkbox" formControlName="RememberMe">
   
   </form>
-      <button id="login-btn" type="submit" (click)="login()">Bejelentkezés</button>
+      <button id="login-btn" type="submit" (click)="register()">Regisztrálok</button>
 </div> 

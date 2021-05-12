@@ -1,7 +1,10 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
+import { SignIn } from 'src/app/shared/models/signin';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
 
 export type IAuthenticationResult =
@@ -29,31 +32,94 @@ export enum AuthenticationResultStatus {
   Fail
 }
 
-export interface IUser {
-  name?: string;
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthorizeService {
-  // By default pop ups are disabled because they don't work properly on Edge.
-  // If you want to enable pop up authentication simply set this flag to false.
 
-  private popUpDisabled = true;
-  private userManager: UserManager;
-  private userSubject: BehaviorSubject<IUser | null> = new BehaviorSubject(null);
+  private readonly baseUri:string="https://orarend.azurewebsites.net/api/"
 
-  public isAuthenticated(): Observable<boolean> {
-    return this.getUser().pipe(map(u => !!u));
+  
+  constructor(private httpClient:HttpClient,private userManager: UserManager, private readonly cookieService: CookieService) {}
+
+  public async SignIn(signIn:SignIn){
+    await this.httpClient.post(this.baseUri+"User/signin",new SignIn(signIn.UserName,signIn.Password,signIn.RememberMe),
+    {
+      responseType:"text",
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Accept': 'tesxt/plain'
+    })
+    }).toPromise().catch(err=>
+      console.log(err)
+    );
+
   }
 
-  public getUser(): Observable<IUser | null> {
-    return concat(
+  public async SignOut(){
+    await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>this.cookieService.delete('TimeTable.AuthCookie'));
+  }
+
+  public async Register(signIn: SignIn){
+    await this.httpClient.post(this.baseUri+"User/register",new SignIn(signIn.UserName,signIn.Password,signIn.RememberMe),{
+      responseType:"text",
+      headers: new HttpHeaders({
+          'Content-Type':  'application/json',
+          'Accept': 'tesxt/plain'
+      })
+  }).toPromise().catch(err=>console.log(err));
+  }
+
+  public isAuthenticated(): boolean{
+    return this.cookieService.check('TimeTable.AuthCookie');
+  }
+
+
+  /*private getUserFromStorage(): Observable<IUser> {
+    return from(this.ensureUserManagerInitialized())
+      .pipe(
+        mergeMap(() => this.userManager.getUser()),
+        map(u => u && u.profile));
+  }*/
+
+  /*public getUser(): string {
+    var ret= concat(
       this.userSubject.pipe(take(1), filter(u => !!u)),
       this.getUserFromStorage().pipe(filter(u => !!u), tap(u => this.userSubject.next(u))),
       this.userSubject.asObservable());
-  }
+      console.log("getuser",ret)
+      return this.userID;
+  }*/
+
+  /*private async ensureUserManagerInitialized(): Promise<void> {
+    if (this.userManager !== undefined) {
+      return;
+    }
+
+    const response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
+    if (!response.ok) {
+      throw new Error(`Could not load settings for '${ApplicationName}'`);
+    }
+
+    const settings: any = await response.json();
+    settings.automaticSilentRenew = true;
+    settings.includeIdTokenInSilentRenew = true;
+    this.userManager = new UserManager(settings);
+
+    this.userManager.events.addUserSignedOut(async () => {
+      await this.userManager.removeUser();
+      this.userSubject.next(null);
+    });
+  }*/
+
+  // By default pop ups are disabled because they don't work properly on Edge.
+  // If you want to enable pop up authentication simply set this flag to false.
+
+  /*private popUpDisabled = true;
+
+  
+
+  
 
   public getAccessToken(): Observable<string> {
     return from(this.ensureUserManagerInitialized())
@@ -169,31 +235,7 @@ export class AuthorizeService {
     return { status: AuthenticationResultStatus.Redirect };
   }
 
-  private async ensureUserManagerInitialized(): Promise<void> {
-    if (this.userManager !== undefined) {
-      return;
-    }
+ 
 
-    const response = await fetch(ApplicationPaths.ApiAuthorizationClientConfigurationUrl);
-    if (!response.ok) {
-      throw new Error(`Could not load settings for '${ApplicationName}'`);
-    }
-
-    const settings: any = await response.json();
-    settings.automaticSilentRenew = true;
-    settings.includeIdTokenInSilentRenew = true;
-    this.userManager = new UserManager(settings);
-
-    this.userManager.events.addUserSignedOut(async () => {
-      await this.userManager.removeUser();
-      this.userSubject.next(null);
-    });
-  }
-
-  private getUserFromStorage(): Observable<IUser> {
-    return from(this.ensureUserManagerInitialized())
-      .pipe(
-        mergeMap(() => this.userManager.getUser()),
-        map(u => u && u.profile));
-  }
+  */
 }
