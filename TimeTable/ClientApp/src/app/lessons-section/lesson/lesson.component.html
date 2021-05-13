@@ -2,9 +2,16 @@
 <p> {{lessonItem.dayOfWeek}}</p>
 <p> {{lessonItem.lessonNumber}}</p> -->
 
-<a class="btn btn-default btn-block">
-    <h4>{{lessonItem.dayOfWeek}}</h4>
-    <p>{{lessonItem.lessonNumber}}</p>
-    <a *ngIf="lessonItem.lessonId">Törlés</a>
-</a>
+<app-edit-lesson 
+  [lesson]="lesson"
+  *ngIf="editing"
+  (lessonChanged) = "onChangeLesson($event)"
+  (close)="onHandleClose()"
+  (delete)="onDeleteLesson($event)">
+</app-edit-lesson>
+
+<div class="btn btn-default btn-block lesson" (click)="onEditLesson()">
+    <span *ngIf="lesson&&lesson.subjectName">{{lesson.subjectName}}</span>
+    <p *ngIf="lesson&&lesson.locationName">{{lesson.locationName}}</p>
+</div>
 

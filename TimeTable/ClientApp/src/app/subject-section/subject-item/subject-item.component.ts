@@ -29,9 +29,11 @@ export class SubjectItemComponent implements OnInit {
 
   onDeleteSubject() {
     this.subjectItemDeleted.emit(this.subjectItem)
+    this.editing = false
   }
 
   onChangeSubject(subjectItem: Subject) {
     this.subjectItemChanged.emit(subjectItem)
+    this.editing = false
   }
 }

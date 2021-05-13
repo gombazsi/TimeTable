@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Lesson } from 'src/app/shared/models/lesson';
 
 @Component({
@@ -8,11 +8,34 @@ import { Lesson } from 'src/app/shared/models/lesson';
 })
 export class LessonComponent implements OnInit {
 
-  @Input() lessonItem: Lesson
+  @Input() lesson: Lesson
+  @Output() lessonChanged = new EventEmitter<Lesson>()
+  @Output() deleteLesson = new EventEmitter<Lesson>()
+  editing:boolean=false;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onEditLesson(){
+    this.editing=true;    
+    console.log("clicked on lesson",this.lesson)
+  }
+
+  onChangeLesson(lesson: Lesson) {
+    this.editing=false;
+    this.lessonChanged.emit(lesson)
+  }
+
+  onHandleClose(){
+    console.log("closing")
+    this.editing=false;
+  }
+
+  onDeleteLesson(){
+    this.editing=false;
+    this.deleteLesson.emit(this.lesson)
   }
 
 }

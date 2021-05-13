@@ -29,9 +29,11 @@ export class LocationItemComponent implements OnInit {
   
   onDeleteLocation() {
     this.locationItemDeleted.emit(this.locationItem)
+    this.editing = false
   }
 
   onChangeLocation(locationItem: Location) {
     this.locationItemChanged.emit(locationItem)
+    this.editing = false
   }
 }

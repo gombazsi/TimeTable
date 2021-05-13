@@ -45,7 +45,8 @@ namespace TimeTable.Services.Implementations
         {
             Location location = new Location { Name = name };
             dbContext.Location.Add(location);
-            location.ApplicationUser = await userManager.FindByNameAsync(userName);
+            if (userName != null)
+                location.ApplicationUser = await userManager.FindByNameAsync(userName);
             await dbContext.SaveChangesAsync();
             return location.LocationId;
         }

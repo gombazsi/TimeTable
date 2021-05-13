@@ -6,40 +6,15 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let lessonrow of lessons">
-          <td *ngFor="let lesson of lessonrow">
-              <app-lesson [lessonItem]="lesson"></app-lesson>
+        <tr *ngFor="let hour of lessonNumbers">
+          <td *ngFor="let day of days;let i = index;">
+              <app-lesson 
+              [lesson]="getLesson(i+1,hour)"
+              (lessonChanged) = "onChangeLesson($event)"
+              (closed)="onHandleClose()"
+              (deleteLesson)="onDeleteLesson($event)"
+              ></app-lesson>
           </td>
         </tr>
     </tbody>
-
-
-    <!-- <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
-    </tbody> -->
 </table>

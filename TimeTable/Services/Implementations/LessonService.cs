@@ -66,7 +66,8 @@ namespace TimeTable.Services
             Lesson toRemove = await dbContext.Lesson.FirstOrDefaultAsync(l => l.DayOfWeek == lesson.DayOfWeek && l.LessonNumber == lesson.LessonNumber && l.LessonId != lesson.LessonId);
             if(toRemove!=null)
                 dbContext.Lesson.Remove(toRemove);
-            lesson.ApplicationUser =await userManager.FindByNameAsync(userName);
+            if(userName!=null)
+                lesson.ApplicationUser =await userManager.FindByNameAsync(userName);
             await dbContext.SaveChangesAsync();
             return lesson.LessonId;
         }

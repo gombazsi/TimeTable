@@ -1,0 +1,21 @@
+<div class="backdrop" (click)="onClose()"></div>
+<div class="alert-box">
+    <h4>Óra szerkeszése</h4>
+    <mat-form-field *ngIf="subjects" class="col-6">
+      <mat-label >Tantárgy</mat-label>
+      <mat-select [(value)]="newSubject" >
+        <mat-option *ngFor="let subject of subjects" [value]="subject" >{{subject.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="locations" class="col-6">
+      <mat-label >Helyszín</mat-label>
+      <mat-select [(value)]="newLocation" >
+        <mat-option *ngFor="let location of locations" [value]="location"  >{{location.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="alert-box-actions">
+        <button class="btn btn-warning mr-1" (click)="onClose()">Mégse</button>
+        <button class="btn btn-success mr-1" (click)="onLessonChanged()">Mentés</button>
+        <button class="btn btn-danger mr-1" (click)="onDelete()">Törlés</button>
+    </div>
+</div>

@@ -45,7 +45,8 @@ namespace TimeTable.Services.Implementations
         {
             Subject subject = new Subject { Name = name };
             dbContext.Subject.Add(subject);
-            subject.ApplicationUser = await userManager.FindByNameAsync(userName);
+            if (userName != null) 
+                subject.ApplicationUser = await userManager.FindByNameAsync(userName);
             await dbContext.SaveChangesAsync();
             return subject.SubjectId;
         }

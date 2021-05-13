@@ -21,6 +21,11 @@ import { EditModalComponent } from './shared/edit-modal/edit-modal.component';
 import { LessonComponent } from './lessons-section/lesson/lesson.component';
 import { AuthorizeService } from 'src/api-authorization/authorize.service';
 import { UserManager } from 'oidc-client';
+import { LessonsService } from './lessons-section/lessons.service';
+import { EditLessonComponent } from './lessons-section/edit-lesson/edit-lesson.component';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -33,7 +38,8 @@ import { UserManager } from 'oidc-client';
     SubjectItemComponent,
     LocationItemComponent,
     EditModalComponent,
-    LessonComponent
+    LessonComponent,
+    EditLessonComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -41,6 +47,9 @@ import { UserManager } from 'oidc-client';
     ReactiveFormsModule,
     FormsModule,
     ApiAuthorizationModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    BrowserAnimationsModule,
     RouterModule.forRoot([
       { path: '', component: SubjectsComponent, pathMatch: 'full' },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
@@ -54,6 +63,7 @@ import { UserManager } from 'oidc-client';
     SubjectsService,
     LocationsService,
     AuthorizeService,
+    LessonsService,
     UserManager
   ],
   bootstrap: [AppComponent]
