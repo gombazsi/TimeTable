@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
@@ -40,7 +39,7 @@ export class AuthorizeService {
   private readonly baseUri:string="https://orarend.azurewebsites.net/api/"
 
   
-  constructor(private httpClient:HttpClient,private userManager: UserManager, private readonly cookieService: CookieService) {}
+  constructor(private readonly httpClient:HttpClient) {}
 
   public async SignIn(signIn:SignIn){
     await this.httpClient.post(this.baseUri+"User/signin",new SignIn(signIn.UserName,signIn.Password,signIn.RememberMe),
@@ -51,7 +50,10 @@ export class AuthorizeService {
         'Accept': 'tesxt/plain'
     })
     }).toPromise()
-    .then(res=>console.log(res))
+    .then(res=>{
+      this.isAuthenticated.next(true)
+      console.log(res,this.isAuthenticated.value)
+    })
     .catch(err=>
       console.log(err)
     );
@@ -60,7 +62,9 @@ export class AuthorizeService {
 
   public async SignOut(){
     console.log("signing out")
-    await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>this.cookieService.delete('TimeTable.AuthCookie')).catch(err=>console.log(err));
+    await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>
+      this.isAuthenticated.next(false)
+      ).catch(err=>console.log(err));
   }
 
   public async Register(signIn: SignIn){
@@ -73,13 +77,7 @@ export class AuthorizeService {
   }).toPromise().catch(err=>console.log(err));
   }
 
-  /*public isAuthenticated=new Observable<boolean> ((observer)=>{
-    var ret= this.cookieService.get('TimeTable.AuthCookie');
-    console.log('isauth',ret);
-    observer.next(!!ret)
-  })*/
-
-  public isAuthenticated:Observable<boolean>
+  public isAuthenticated:BehaviorSubject<boolean>=new BehaviorSubject(false);
 
 
   /*private getUserFromStorage(): Observable<IUser> {
