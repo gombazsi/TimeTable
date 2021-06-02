@@ -52,7 +52,7 @@ export class AuthorizeService {
     }).toPromise()
     .then(res=>{
       this.isAuthenticated.next(true)
-      console.log(res,this.isAuthenticated.value)
+      console.log(res,this.isAuthenticated.value,'most elvileg jól bejelentkeztem')
     })
     .catch(err=>
       console.log(err)
@@ -64,7 +64,7 @@ export class AuthorizeService {
     console.log("signing out")
     await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>
       this.isAuthenticated.next(false)
-      ).catch(err=>console.log(err));
+      ).catch(err=>console.log(err,'szét van baszva az egész'));
   }
 
   public async Register(signIn: SignIn){
