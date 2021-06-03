@@ -1,6 +1,7 @@
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
 import { map, tap } from "rxjs/operators";
+import { AuthorizeService } from "src/api-authorization/authorize.service";
 import { ILocation } from "../shared/interfaces/location-interface";
 import { Location } from "../shared/models/location";
 
@@ -10,12 +11,18 @@ export class LocationsService {
     locationsChanged = new EventEmitter<void>()
     url: string = 'https://orarend.azurewebsites.net/api/Location/locations'
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,private readonly authService:AuthorizeService) { }
 
     getLocations() {
+      let myHeaders=new Headers();
+      const authHeader=this.authService.getAuthCookie();
+      console.log(authHeader)
+      myHeaders.append(authHeader.name,authHeader.value);
+      const options:Object={headers:myHeaders,withCredentials:true}
+      console.log(options)
         return this.http
             .get<{ [key: number]: ILocation }>(
-                this.url
+                'https://localhost:44320/api/Location/locations',options
             )
             .pipe(
                 map(responseData => {

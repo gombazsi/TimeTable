@@ -50,6 +50,7 @@ namespace TimeTable.Controllers
         [HttpGet("subjects/{id}")]
         public async Task<Subject> GetSubject(int id)
         {
+
             return await subjectService.GetSubjectAsync(id);
         }
     }

@@ -1,6 +1,7 @@
 import { HttpClient, HttpEventType, HttpHeaders } from "@angular/common/http";
 import { EventEmitter, Injectable } from "@angular/core";
 import { map, tap } from "rxjs/operators";
+import { AuthorizeService } from "src/api-authorization/authorize.service";
 import { ISubject } from "../shared/interfaces/subject-interface";
 import { Subject } from "../shared/models/subject";
 
@@ -10,12 +11,16 @@ export class SubjectsService {
     subjectsChanged = new EventEmitter<void>()
     url: string = 'https://orarend.azurewebsites.net/api/Subject/subjects'
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,private readonly authService:AuthorizeService) { }
 
-    getSubjects() {
+    getSubjects() {      
+      let myHeaders=new Headers();
+      const authHeader=this.authService.getAuthCookie();
+      myHeaders.append(authHeader.name,authHeader.value);
+      const options:Object={headers:myHeaders}
         return this.http
             .get<{ [key: number]: ISubject }>(
-                this.url
+              'https://localhost:44320/api/Subject/subjects',options
             )
             .pipe(
                 map(responseData => {

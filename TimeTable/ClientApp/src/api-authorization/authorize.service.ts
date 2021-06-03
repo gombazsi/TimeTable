@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
@@ -39,7 +40,7 @@ export class AuthorizeService {
   private readonly baseUri:string="https://orarend.azurewebsites.net/api/"
 
   
-  constructor(private readonly httpClient:HttpClient) {}
+  constructor(private readonly httpClient:HttpClient, private readonly cookieService: CookieService) {}
 
   public async SignIn(signIn:SignIn){
     await this.httpClient.post(this.baseUri+"User/signin",new SignIn(signIn.UserName,signIn.Password,signIn.RememberMe),
@@ -52,7 +53,7 @@ export class AuthorizeService {
     }).toPromise()
     .then(res=>{
       this.isAuthenticated.next(true)
-      console.log(res,this.isAuthenticated.value,'most elvileg jól bejelentkeztem')
+      console.log(res,this.isAuthenticated.value)
     })
     .catch(err=>
       console.log(err)
@@ -64,7 +65,7 @@ export class AuthorizeService {
     console.log("signing out")
     await this.httpClient.get(this.baseUri+"User/signout").toPromise().then(res=>
       this.isAuthenticated.next(false)
-      ).catch(err=>console.log(err,'szét van baszva az egész'));
+      ).catch(err=>console.log(err));
   }
 
   public async Register(signIn: SignIn){
@@ -79,6 +80,9 @@ export class AuthorizeService {
 
   public isAuthenticated:BehaviorSubject<boolean>=new BehaviorSubject(false);
 
+  public getAuthCookie(){
+    return {name:"TimeTable.AuthCookie",value:this.cookieService.get("TimeTable.AuthCookie")}
+  }
 
   /*private getUserFromStorage(): Observable<IUser> {
     return from(this.ensureUserManagerInitialized())
